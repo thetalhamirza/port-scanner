@@ -38,7 +38,7 @@ def ping_sweep(network, netmask):
                     live_hosts.append(result)
         for _ in range(100):
             print(colored("-", "blue"), end="")
-        print("\nOnline hosts: ", "green")
+        print(colored("\nOnline hosts: ", "green"))
         for host in live_hosts:
             print(colored(f"[>] {host}", "green"))
         print("")
