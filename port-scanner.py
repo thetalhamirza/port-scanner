@@ -16,11 +16,13 @@ def ping(host):
 def ping_sweep(network, netmask):
     live_hosts = []
 
-    num_threads = os.cpu_count()
+    # num_threads = os.cpu_count()
+    num_threads = threads
+
     hosts = list(ip_network(network + '/' + netmask).hosts())
     total_hosts = len(hosts)
 
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
+    with ThreadPoolExecutor(num_threads) as executor:
         futures = {executor.submit(ping, host): host for host in hosts}
         for i, future in enumerate(as_completed(futures), start=1):
             host = futures[future]
@@ -35,7 +37,7 @@ def ping_sweep(network, netmask):
 
 def scan_port(args):
     ip, port = args
-    response = sr1(dst=ip/TCP(dport=port, flags="S"), timeout=1, verbose=0)
+    response = sr1(IP(dst=ip)/TCP(dport=port, flags="S"), timeout=1, verbose=0)
     if response is not None and response[TCP].flags == "SA":
         return port
     return None
@@ -43,10 +45,11 @@ def scan_port(args):
 def port_scan(ip, ports):
     open_ports = []
 
-    num_threads = os.cpu_count()
+    # num_threads = os.cpu_count()
+    num_threads = threads
     total_ports = len(ports)
 
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
+    with ThreadPoolExecutor(num_threads) as executor:
         futures = {executor.submit(scan_port, (ip, port)): port for port in ports}
         for i, future in enumerate(as_completed(futures), start=1):
             port = futures[future]
@@ -70,8 +73,16 @@ def get_live_hosts_and_ports(network, netmask):
     return host_port_mapping
 
 def main():
+    global threads
     network = sys.argv[1]
     netmask = sys.argv[2]
+    if len(sys.argv) == 4:
+        threads = sys.argv[3]
+        print(f"Threads set: {threads}")
+    else:
+        threads = 50
+        print(f"Default threads set: {threads}")
+
     host_port_mapping = get_live_hosts_and_ports(network, netmask)
     for host, open_ports in host_port_mapping.items():
         print(f"\nHost {host} has the following open ports: {open_ports}")
