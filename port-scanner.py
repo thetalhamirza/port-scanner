@@ -61,7 +61,7 @@ def port_scan(ip, ports):
             port = futures[future]
             result = future.result()
             with print_lock:
-                print(colored(f"\n[+] Scanning {ip}: {i}/{total_ports}\n", "light_blue"), end="\r")
+                print(colored(f"\n[+] Scanning {ip}: {i}/{total_ports}", "light_blue"), end="\r")
                 if result is not None:
                     print(colored(f"\n[>] Port {port} is open on host {ip}\n", "green"))
                     open_ports.append(result)
