@@ -32,12 +32,17 @@ def ping_sweep(network, netmask):
             host = futures[future]
             result = future.result()
             with print_lock:
-                print(colored(f"\n[+] Scanning {i}/{total_hosts}\n", "light_blue"), end="\r")
+                print(colored(f"\n[+] Scanning {i}/{total_hosts}", "light_blue"), end="\r")
                 if result is not None:
                     print(colored(f"\n[>] Host {host} is online.\n", "green"))
                     live_hosts.append(result)
         for _ in range(100):
-            print(colored("-", "blue"), end="")
+            print(colored("\n-\n", "blue"), end="")
+        print("\nOnline hosts: ", "green")
+        for host in live_hosts:
+            print(colored(f"[>] {host}", "green"))
+        for _ in range(100):
+            print(colored("\n-\n", "blue"), end="")
     return live_hosts
 
 
@@ -66,7 +71,7 @@ def port_scan(ip, ports):
                     print(colored(f"\n[>] Port {port} is open on host {ip}\n", "green"))
                     open_ports.append(result)
         for _ in range(100):
-            print(colored("-", "blue"), end="")            
+            print(colored("\n-\n", "blue"), end="")            
     return open_ports
 
 def get_live_hosts_and_ports(network, netmask):
