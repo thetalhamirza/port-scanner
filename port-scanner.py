@@ -32,10 +32,12 @@ def ping_sweep(network, netmask):
             host = futures[future]
             result = future.result()
             with print_lock:
-                print(colored(f"[+] Scanning {i}/{total_hosts}", "light_blue"), end="\r")
+                print(colored(f"\n[+] Scanning {i}/{total_hosts}\n", "light_blue"), end="\r")
                 if result is not None:
-                    print(colored(f"\n\n[>] Host {host} is online.", "green"))
+                    print(colored(f"\n[>] Host {host} is online.\n", "green"))
                     live_hosts.append(result)
+        for _ in range(100):
+            print(colored("-", "blue"), end="")
     return live_hosts
 
 
@@ -59,10 +61,12 @@ def port_scan(ip, ports):
             port = futures[future]
             result = future.result()
             with print_lock:
-                print(colored(f"[+] Scanning {ip}: {i}/{total_ports}", "light_blue"), end="\r")
+                print(colored(f"\n[+] Scanning {ip}: {i}/{total_ports}\n", "light_blue"), end="\r")
                 if result is not None:
-                    print(colored(f"\n\n[>] Port {port} is open on host {ip}", "green"))
+                    print(colored(f"\n[>] Port {port} is open on host {ip}\n", "green"))
                     open_ports.append(result)
+        for _ in range(100):
+            print(colored("-", "blue"), end="")            
     return open_ports
 
 def get_live_hosts_and_ports(network, netmask):
@@ -82,10 +86,10 @@ def main():
     netmask = sys.argv[2]
     if len(sys.argv) == 4:
         threads = int(sys.argv[3])
-        print(colored(f"\n[+] Threads set: {threads}", "light_blue"))
+        print(colored(f"\n[+] Threads set: {threads}\n", "light_blue"))
     else:
         threads = 50
-        print(colored(f"\n[+] Default threads set: {threads}", "light_blue"))
+        print(colored(f"\n[+] Default threads set: {threads}\n", "light_blue"))
 
     host_port_mapping = get_live_hosts_and_ports(network, netmask)
     print("\n\n")
