@@ -77,7 +77,7 @@ def main():
     network = sys.argv[1]
     netmask = sys.argv[2]
     if len(sys.argv) == 4:
-        threads = sys.argv[3]
+        threads = int(sys.argv[3])
         print(f"Threads set: {threads}")
     else:
         threads = 50
