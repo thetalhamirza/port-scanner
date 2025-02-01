@@ -4,6 +4,10 @@ from scapy.all import ICMP, IP, sr1, TCP, sr
 from ipaddress import ip_network
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
+from colorama import init
+from termcolor import colored
+
+init()
 
 print_lock = Lock()
 
@@ -28,9 +32,9 @@ def ping_sweep(network, netmask):
             host = futures[future]
             result = future.result()
             with print_lock:
-                print(f"Scanning {i}/{total_hosts}", end="\r")
+                print(colored(f"[+] Scanning {i}/{total_hosts}", "light_blue"), end="\r")
                 if result is not None:
-                    print(f"\nHost {host} is online.")
+                    print(colored(f"\n\n[>] Host {host} is online.", "green"))
                     live_hosts.append(result)
     return live_hosts
 
@@ -55,9 +59,9 @@ def port_scan(ip, ports):
             port = futures[future]
             result = future.result()
             with print_lock:
-                print(f"Scanning {ip}: {i}/{total_ports}", end="\r")
+                print(colored(f"[+] Scanning {ip}: {i}/{total_ports}", "light_blue"), end="\r")
                 if result is not None:
-                    print(f"\nPort {port} is open on host {ip}")
+                    print(colored(f"\n\n[>] Port {port} is open on host {ip}", "green"))
                     open_ports.append(result)
     return open_ports
 
@@ -78,14 +82,15 @@ def main():
     netmask = sys.argv[2]
     if len(sys.argv) == 4:
         threads = int(sys.argv[3])
-        print(f"Threads set: {threads}")
+        print(colored(f"\n[+] Threads set: {threads}", "light_blue"))
     else:
         threads = 50
-        print(f"Default threads set: {threads}")
+        print(colored(f"\n[+] Default threads set: {threads}", "light_blue"))
 
     host_port_mapping = get_live_hosts_and_ports(network, netmask)
+    print("\n\n")
     for host, open_ports in host_port_mapping.items():
-        print(f"\nHost {host} has the following open ports: {open_ports}")
+        print(colored(f"--> Host {host} has the following open ports: {open_ports}", "light_green"))
 
 
 if __name__ == "__main__":
