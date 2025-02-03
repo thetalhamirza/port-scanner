@@ -1,5 +1,7 @@
 import os
 import sys
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import ICMP, IP, sr1, TCP, sr
 from ipaddress import ip_network
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -34,7 +36,7 @@ def ping_sweep(network, netmask):
             with print_lock:
                 print(colored(f"[+] Scanning {i}/{total_hosts}", "light_blue"), end="\r")
                 if result is not None:
-                    print(colored(f"\n[>] Host {host} is online.\n", "green"))
+                    print(colored(f"\n\n[>] Host {host} is online.\n", "green"))
                     live_hosts.append(result)
         for _ in range(100):
             print(colored("-", "blue"), end="")
