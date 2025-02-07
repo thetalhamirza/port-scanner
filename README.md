@@ -13,7 +13,7 @@ A powerful, multithreaded port scanner written in Python, capable of performing 
 ## Usage
 
 ```bash
-python port_scanner.py <network> <netmask> [threads]
+python port-scanner.py <network> <netmask> [threads]
 ```
 
 ### Parameters:
@@ -25,7 +25,7 @@ python port_scanner.py <network> <netmask> [threads]
 ### Example:
 
 ```bash
-python port_scanner.py 192.168.1.0 24 100
+python port-scanner.py 192.168.1.0 24 100
 ```
 
 This will scan the `192.168.1.0/24` network using **100 threads**.
