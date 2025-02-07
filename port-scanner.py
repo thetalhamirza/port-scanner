@@ -84,7 +84,15 @@ def get_live_hosts_and_ports(network, netmask):
     live_hosts = ping_sweep(network, netmask)
 
     host_port_mapping = {}
-    ports = range(1, 1024)
+    # Define the common ports list
+    common_ports = {21, 22, 23, 25, 53, 80, 110, 139, 143, 389, 443, 445, 3306, 
+                3389, 5900, 8080, 8443, 9200, 11211}
+
+    # Merge with the range of 1-1023
+    ports = set(range(1, 1024)) | common_ports  # Using set union to avoid duplicates
+
+    # Convert back to a sorted list for ordered scanning
+    ports = sorted(ports)
     for host in live_hosts:
         open_ports = port_scan(host, ports)
         host_port_mapping[host] = open_ports
